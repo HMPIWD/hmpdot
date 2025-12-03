@@ -1,6 +1,7 @@
 # -home-hmpiwd
 CachyOS&amp;hyprland stash
 
+Ierarchy:
 ```
 .config/
 │
@@ -28,4 +29,11 @@ CachyOS&amp;hyprland stash
 │   ├─ Shades-of-purple
 │   └─ kvantum.kvconfig
 └─ install.sh           # Creates copy of your configs and installs HMPIWD's ones
+```
+
+Insalling:
+```
+git clone https://github.com/HMPIWD/-home-hmpiwd.git
+cd -home-hmpiwd
+./HMPIWDinstall.sh
 ```
