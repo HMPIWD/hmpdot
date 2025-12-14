@@ -37,10 +37,58 @@ sudo pacman -S --needed --noconfirm \
     gtk4 \
     gtk3 \
     python \
-    sassc
+    sassc \
+    fontconfig
 
 echo "=== Installing Hyprpanel ==="
 yay -S --needed --noconfirm ags-hyprpanel-git
+
+# ==========================================================
+# FONT INSTALL (Azeret Mono Variable)
+# ==========================================================
+
+echo "=== Installing Azeret Mono system font ==="
+
+FONT_SRC="./fonts/AzeretMono-VariableFont_wght.ttf"
+FONT_DEST="/usr/share/fonts/TTF"
+
+if [ -f "$FONT_SRC" ]; then
+    sudo mkdir -p "$FONT_DEST"
+    sudo cp "$FONT_SRC" "$FONT_DEST/"
+    echo "✔ Font copied to $FONT_DEST"
+else
+    echo "✖ Font file not found: $FONT_SRC"
+    exit 1
+fi
+
+sudo fc-cache -fv
+
+# ==========================================================
+# FONTCONFIG (system monospace)
+# ==========================================================
+
+echo "=== Configuring system monospace font ==="
+
+sudo tee /etc/fonts/local.conf >/dev/null << 'EOF'
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+
+  <alias>
+    <family>monospace</family>
+    <prefer>
+      <family>Azeret Mono</family>
+    </prefer>
+  </alias>
+
+</fontconfig>
+EOF
+
+sudo fc-cache -fv
+
+# ==========================================================
+# CONFIG BACKUP
+# ==========================================================
 
 echo "=== Creating config backup ==="
 BACKUP_DIR="$HOME/.config/backup_$(date +%F_%H-%M)"
@@ -59,6 +107,10 @@ backup_if_exists alacritty
 backup_if_exists gtk-4.0
 backup_if_exists gtk-5.0
 backup_if_exists Kvantum
+
+# ==========================================================
+# COPY CONFIGS
+# ==========================================================
 
 echo "=== Copying new configs ==="
 
@@ -91,5 +143,6 @@ if command -v kvantummanager &>/dev/null; then
 fi
 
 echo "=== DONE ==="
-echo "Your backups are in: $BACKUP_DIR"
-echo "Reboot your PC for changes to appear!"
+echo "✔ Azeret Mono is now system monospace"
+echo "✔ Backups stored in: $BACKUP_DIR"
+echo "➡ Reboot or re-login for full effect"
